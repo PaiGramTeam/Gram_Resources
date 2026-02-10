@@ -22,13 +22,13 @@ ASSETS_PATH.mkdir(exist_ok=True, parents=True)
 
 class IconGetter(Protocol):
     @overload
-    def __call__(self, target: StrOrInt, second_target: StrOrInt) -> Path: ...
+    def __call__(self, target: StrOrInt, second_target: StrOrInt) -> Path | None: ...
     @overload
-    def __call__(self, target: StrOrInt) -> Path: ...
+    def __call__(self, target: StrOrInt) -> Path | None: ...
 
 
 def _icon_getter(mode: str) -> IconGetter:
-    def wrapper(self: "_AssetsService[T]", target: StrOrInt, second_target: StrOrInt | None = None) -> Path:
+    def wrapper(self: "_AssetsService[T]", target: StrOrInt, second_target: StrOrInt | None = None) -> Path | None:
         return self._get_icon(self.get_target(target, second_target), mode)
 
     return wrapper
