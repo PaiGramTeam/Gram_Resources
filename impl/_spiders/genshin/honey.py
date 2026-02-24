@@ -176,9 +176,9 @@ class HoneyWeaponSpider(BaseSpider):
             try:
                 await queue.put(await self._scrape(u))  # 爬取一条数据，并将其放入队列中
             except NotImplementedError as exc:
-                logs.info("爬取数据出现测试服数据 %s", str(exc))
+                logs.info("爬取数据出现测试服数据 url[%s] %s", u, str(exc))
             except Exception as exc:  # pylint: disable=W0703
-                logs.info("爬取数据出现异常 %s", str(exc))
+                logs.info("爬取数据出现异常 url[%s] %s", u, str(exc))
             finally:
                 signal.value -= 1  # 信号量减少 1 ，说明该爬虫任务已经完成
 

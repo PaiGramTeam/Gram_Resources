@@ -2,6 +2,7 @@ import traceback
 from functools import partial
 from typing import List, Dict, Optional
 
+from impl._spiders.genshin.other_json_data import ZH_LANG_MAP
 from impl.assets_utils.logger import logs
 from impl.config import config
 from impl.core._abstract_spider import BaseSpider, RequestClient
@@ -16,6 +17,7 @@ ExcelBinOutput/AvatarExcelConfigData.json
 ExcelBinOutput/AvatarPromoteExcelConfigData.json
 ExcelBinOutput/AvatarSkillDepotExcelConfigData.json
 ExcelBinOutput/AvatarSkillExcelConfigData.json
+ExcelBinOutput/BydMaterialExcelConfigData.json
 ExcelBinOutput/DungeonEntryExcelConfigData.json
 ExcelBinOutput/MaterialExcelConfigData.json
 ExcelBinOutput/ProudSkillExcelConfigData.json
@@ -120,7 +122,6 @@ class GenshinRoleMaterialSpider(BaseSpider):
 
         self.material_data: Dict[int, str] = {}
         self.zh_lang_path = save_path("TextMap/TextMapCHS.json")
-        self.zh_lang = {}
         self.avatar_promote_data: Dict[str, str] = {}
         self.skill_depot_map: Dict[str, int] = {}
         self.weapon_promote_map: Dict[int, List[int]] = {}
@@ -173,7 +174,7 @@ class GenshinRoleMaterialSpider(BaseSpider):
             if cid >= 10000900:
                 # 未上线角色
                 continue
-            avatar_name = self.zh_lang[str(avatar["nameTextMapHash"])]
+            avatar_name = ZH_LANG_MAP[str(avatar["nameTextMapHash"])]
             if avatar_name not in ignore_name_list and avatar_name not in name_list:
                 name_list.append(avatar_name)
                 self.avatar_promote_data[avatar_name] = avatar["avatarPromoteId"]
@@ -185,7 +186,7 @@ class GenshinRoleMaterialSpider(BaseSpider):
         _material_data = await FileManager.load_json(self.material_data_path)
         for material in _material_data:
             try:
-                self.material_data[material["id"]] = self.zh_lang[str(material["nameTextMapHash"])]
+                self.material_data[material["id"]] = ZH_LANG_MAP[str(material["nameTextMapHash"])]
             except KeyError:
                 pass
 
@@ -209,7 +210,7 @@ class GenshinRoleMaterialSpider(BaseSpider):
         weapon_data = await FileManager.load_json(self.weapon_data_path)
         for weapon in weapon_data:
             wid = weapon["id"]
-            name = self.zh_lang.get(str(weapon["nameTextMapHash"]), "")
+            name = ZH_LANG_MAP.get(str(weapon["nameTextMapHash"]), "")
             if "test" in name or "测试" in name:
                 continue
             pid = weapon["weaponPromoteId"]
@@ -326,7 +327,7 @@ class GenshinRoleMaterialSpider(BaseSpider):
             logs.info("Download raw file")
             await self.download_data_file()
             logs.info("Download raw file success")
-        self.zh_lang = await FileManager.load_json(self.zh_lang_path)
+        ZH_LANG_MAP.update(await FileManager.load_json(self.zh_lang_path))
         try:
             await self.get_material_data()
             await self.get_material_data_weapon()

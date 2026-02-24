@@ -14,7 +14,7 @@ class AmbrBaseSpider(BaseSpider):
     url = "https://gi.yatta.moe/api/v2/chs/avatar"
 
     async def start_crawl(self) -> List[BaseWikiModel]:
-        req, _ = await self._request("GET", self.url)
+        req, _ = await self._request("GET", self.url + "?vh=90F0")
         data = req.json()
         d = []
         tasks = []
@@ -29,8 +29,8 @@ class AmbrBaseSpider(BaseSpider):
         return d
 
     @staticmethod
-    def get_icon_url(filename: str, ext: str) -> str:
-        return f"https://gi.yatta.moe/assets/UI/{filename}.{ext}"
+    def get_icon_url(filename: str, ext: str) -> list[str]:
+        return [f"https://enka.network/ui/{filename}.{ext}", f"https://gi.yatta.moe/assets/UI/{filename}.{ext}"]
 
     async def _parse_content(self, data: Dict[str, Any]) -> list[BaseWikiModel]:
         try:

@@ -21,7 +21,7 @@ class RequestClient:
     @staticmethod
     async def request(method: str, url: str, times: int = 3) -> "Response":
         try:
-            response = await RequestClient.client.request(method, url)
+            response = await RequestClient.client.request(method, url, follow_redirects=True)
             if response.status_code == 200:
                 return response
             else:

@@ -106,3 +106,9 @@ class FileManager:
         file_path = FileManager.get_raw_icon_path(url, game, data_type, data_source)
         await FileManager.save_file(file_path, data)
         return file_path.relative_to(ASSETS_ROOT)
+
+    @staticmethod
+    def get_file_ext(file_path: str) -> str:
+        """获取文件扩展名"""
+        file = Path(file_path)
+        return file.suffix

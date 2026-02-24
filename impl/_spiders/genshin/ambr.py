@@ -32,10 +32,6 @@ class AmbrCharacterSpider(AmbrBaseSpider):
         }
 
     @staticmethod
-    def get_icon_url(filename: str, ext: str) -> str:
-        return f"https://enka.network/ui/{filename}.{ext}"
-
-    @staticmethod
     async def get_character_data(data: Dict[str, Any]) -> Dict[str, Any]:
         region = data["region"]
         special_region = {"NODKRAI_ZIBAI": "Nodkrai"}.get(region, region)
@@ -74,16 +70,18 @@ class AmbrCharacterSpider(AmbrBaseSpider):
         # 图片
         game_name_map = self.game_name_map(game_name)
         for k, v in game_name_map.items():
-            u = self.get_icon_url(v[0], v[1])
-            try:
-                p = await self._download_file(u)
-            except Exception as e:
-                logs.info(f"下载图片失败：{c} {e}")
-                continue
-            i = IconAsset()
-            j = IconAssetUrl(url=u, path=str(p))
-            setattr(i, v[1], j)
-            setattr(c, k, i)
+            u_list = self.get_icon_url(v[0], v[1])
+            for u in u_list:
+                try:
+                    p = await self._download_file(u)
+                except Exception as e:
+                    logs.info(f"下载图片失败：{c} {e}")
+                    continue
+                i = IconAsset()
+                j = IconAssetUrl(url=u, path=str(p))
+                setattr(i, v[1], j)
+                setattr(c, k, i)
+                break
         return c
 
 
@@ -101,7 +99,7 @@ class AmbrWeaponSpider(AmbrBaseSpider):
     def game_name_map(game_name: str) -> dict[str, tuple[str, str]]:
         return {
             "icon": (f"UI_EquipIcon_{game_name}", "png"),
-            # "awaken": (f"UI_EquipIcon_{game_name}_Awaken", "png"),
+            "awaken": (f"UI_EquipIcon_{game_name}_Awaken", "png"),
             "gacha": (f"UI_Gacha_EquipIcon_{game_name}", "png"),
         }
 
@@ -123,16 +121,18 @@ class AmbrWeaponSpider(AmbrBaseSpider):
         # 图片
         game_name_map = self.game_name_map(game_name)
         for k, v in game_name_map.items():
-            u = self.get_icon_url(v[0], v[1])
-            try:
-                p = await self._download_file(u)
-            except Exception as e:
-                logs.info(f"下载图片失败：{c} {e}")
-                continue
-            i = IconAsset()
-            j = IconAssetUrl(url=u, path=str(p))
-            setattr(i, v[1], j)
-            setattr(c, k, i)
+            u_list = self.get_icon_url(v[0], v[1])
+            for u in u_list:
+                try:
+                    p = await self._download_file(u)
+                except Exception as e:
+                    logs.info(f"下载图片失败：{c} {e}")
+                    continue
+                i = IconAsset()
+                j = IconAssetUrl(url=u, path=str(p))
+                setattr(i, v[1], j)
+                setattr(c, k, i)
+                break
         return [c]
 
 
@@ -164,16 +164,18 @@ class AmbrMaterialSpider(AmbrBaseSpider):
         # 图片
         game_name_map = self.game_name_map(data["icon"])
         for k, v in game_name_map.items():
-            u = self.get_icon_url(v[0], v[1])
-            try:
-                p = await self._download_file(u)
-            except Exception as e:
-                logs.info(f"下载图片失败：{c} {e}")
-                continue
-            i = IconAsset()
-            j = IconAssetUrl(url=u, path=str(p))
-            setattr(i, v[1], j)
-            setattr(c, k, i)
+            u_list = self.get_icon_url(v[0], v[1])
+            for u in u_list:
+                try:
+                    p = await self._download_file(u)
+                except Exception as e:
+                    logs.info(f"下载图片失败：{c} {e}")
+                    continue
+                i = IconAsset()
+                j = IconAssetUrl(url=u, path=str(p))
+                setattr(i, v[1], j)
+                setattr(c, k, i)
+                break
         return [c]
 
 
@@ -204,8 +206,11 @@ class AmbrArtifactSpider(AmbrBaseSpider):
         }
 
     @staticmethod
-    def get_icon_url(filename: str, ext: str) -> str:
-        return f"https://gi.yatta.moe/assets/UI/reliquary/{filename}.{ext}"
+    def get_icon_url(filename: str, ext: str) -> list[str]:
+        return [
+            f"https://enka.network/ui/{filename}.{ext}",
+            f"https://gi.yatta.moe/assets/UI/reliquary/{filename}.{ext}",
+        ]
 
     async def parse_content(self, data: Dict[str, Any]) -> list[BaseWikiModel]:
         c_data = await self.get_character_data(data)
@@ -213,24 +218,26 @@ class AmbrArtifactSpider(AmbrBaseSpider):
         # 图片
         game_name_map = self.game_name_map(c.id)
         for k, v in game_name_map.items():
-            u = self.get_icon_url(v[0], v[1])
-            try:
-                p = await self._download_file(u)
-            except Exception as e:
-                if c.id not in [
-                    "15004",  # 冰之川与雪之砂
-                    "15009",  # 祭火之人
-                    "15010",  # 祭水之人
-                    "15011",  # 祭雷之人
-                    "15012",  # 祭风之人
-                    "15013",  # 祭冰之人
-                ]:
-                    logs.info(f"下载图片失败：{c} {e}")
-                continue
-            i = IconAsset()
-            j = IconAssetUrl(url=u, path=str(p))
-            setattr(i, v[1], j)
-            setattr(c, k, i)
+            u_list = self.get_icon_url(v[0], v[1])
+            for u in u_list:
+                try:
+                    p = await self._download_file(u)
+                except Exception as e:
+                    if c.id not in [
+                        "15004",  # 冰之川与雪之砂
+                        "15009",  # 祭火之人
+                        "15010",  # 祭水之人
+                        "15011",  # 祭雷之人
+                        "15012",  # 祭风之人
+                        "15013",  # 祭冰之人
+                    ]:
+                        logs.info(f"下载图片失败：{c} {e}")
+                    continue
+                i = IconAsset()
+                j = IconAssetUrl(url=u, path=str(p))
+                setattr(i, v[1], j)
+                setattr(c, k, i)
+                break
         return [c]
 
 
@@ -260,8 +267,11 @@ class AmbrNameCardSpider(AmbrBaseSpider):
         }
 
     @staticmethod
-    def get_icon_url(filename: str, ext: str) -> str:
-        return f"https://gi.yatta.moe/assets/UI/namecard/{filename}.{ext}"
+    def get_icon_url(filename: str, ext: str) -> list[str]:
+        return [
+            f"https://enka.network/ui/{filename}.{ext}",
+            f"https://gi.yatta.moe/assets/UI/namecard/{filename}.{ext}",
+        ]
 
     async def parse_content(self, data: Dict[str, Any]) -> list[BaseWikiModel]:
         c_data = await self.get_character_data(data)
@@ -269,14 +279,16 @@ class AmbrNameCardSpider(AmbrBaseSpider):
         # 图片
         game_name_map = self.game_name_map(data["icon"])
         for k, v in game_name_map.items():
-            u = self.get_icon_url(v[0], v[1])
-            try:
-                p = await self._download_file(u)
-            except Exception as e:
-                logs.info(f"下载图片失败：{c} {e}")
-                continue
-            i = IconAsset()
-            j = IconAssetUrl(url=u, path=str(p))
-            setattr(i, v[1], j)
-            setattr(c, k, i)
+            u_list = self.get_icon_url(v[0], v[1])
+            for u in u_list:
+                try:
+                    p = await self._download_file(u)
+                except Exception as e:
+                    logs.info(f"下载图片失败：{c} {e}")
+                    continue
+                i = IconAsset()
+                j = IconAssetUrl(url=u, path=str(p))
+                setattr(i, v[1], j)
+                setattr(c, k, i)
+                break
         return [c]
