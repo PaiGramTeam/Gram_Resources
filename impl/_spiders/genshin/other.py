@@ -24,6 +24,7 @@ ExcelBinOutput/ProudSkillExcelConfigData.json
 ExcelBinOutput/WeaponExcelConfigData.json
 ExcelBinOutput/WeaponPromoteExcelConfigData.json
 TextMap/TextMapCHS.json
+TextMap/TextMap_MediumCHS.json
 TextMap/TextMapCHT.json
 TextMap/TextMapDE.json
 TextMap/TextMapEN.json
@@ -122,6 +123,7 @@ class GenshinRoleMaterialSpider(BaseSpider):
 
         self.material_data: Dict[int, str] = {}
         self.zh_lang_path = save_path("TextMap/TextMapCHS.json")
+        self.zh_lang_path2 = save_path("TextMap/TextMap_MediumCHS.json")
         self.avatar_promote_data: Dict[str, str] = {}
         self.skill_depot_map: Dict[str, int] = {}
         self.weapon_promote_map: Dict[int, List[int]] = {}
@@ -328,6 +330,7 @@ class GenshinRoleMaterialSpider(BaseSpider):
             await self.download_data_file()
             logs.info("Download raw file success")
         ZH_LANG_MAP.update(await FileManager.load_json(self.zh_lang_path))
+        ZH_LANG_MAP.update(await FileManager.load_json(self.zh_lang_path2))
         try:
             await self.get_material_data()
             await self.get_material_data_weapon()
@@ -452,7 +455,6 @@ class GenshinDailyMaterialSpider(GenshinRoleMaterialSpider):
     async def initialize(self):
         if not config.GENSHIN:
             return
-        self.zh_lang = await FileManager.load_json(self.zh_lang_path)
         logs.info("parse_honey_impact_source")
         try:
             await self.get_material_data()
