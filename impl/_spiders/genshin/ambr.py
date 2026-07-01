@@ -34,7 +34,6 @@ class AmbrCharacterSpider(AmbrBaseSpider):
     @staticmethod
     async def get_character_data(data: Dict[str, Any]) -> Dict[str, Any]:
         region = data["region"]
-        special_region = {"NODKRAI_ZIBAI": "Nodkrai"}.get(region, region)
         return {
             "id": data["id"],
             "name": data["name"],
@@ -44,7 +43,7 @@ class AmbrCharacterSpider(AmbrBaseSpider):
             "weapon_type": data["weaponType"],
             "body_type": data["bodyType"],
             "birthday": {"month": data["birthday"][0], "day": data["birthday"][1]},
-            "association": Association.convert(special_region),
+            "association": Association.convert(region),
         }
 
     async def parse_content(self, data: Dict[str, Any]) -> list[BaseWikiModel]:

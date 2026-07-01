@@ -11,7 +11,7 @@ from impl.models.base import BaseWikiModel
 from impl.models.enums import Game, DataType
 from impl.models.genshin.daily_material import MaterialsData, AreaDailyMaterialsData, CITY_NAMES
 
-FILE_PATH = "https://gitlab.com/Dimbreath/AnimeGameData/-/raw/master/{PATH}"
+FILE_PATH = "https://gitlab.com/Dimbreath/animegamedata2/-/raw/main/{PATH}"
 DATA_FILES = """
 ExcelBinOutput/AvatarExcelConfigData.json
 ExcelBinOutput/AvatarPromoteExcelConfigData.json

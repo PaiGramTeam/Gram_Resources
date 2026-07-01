@@ -109,13 +109,14 @@ class AttributeType(StrEnum):
 
 _ASSOCIATION_MAP = {
     "Other": ["Mainactor", "Ranger", "Fatui"],
-    "Snezhnaya": [],
+    "Snezhnaya": ["Snezhnaya_Star"],
     "Sumeru": [],
     "Inazuma": [],
     "Liyue": [],
     "Mondstadt": [],
     "Fontaine": [],
     "Natlan": [],
+    "Nodkrai": ["Nodkrai_Zibai"],
 }
 
 
