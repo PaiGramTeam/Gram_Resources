@@ -25,7 +25,7 @@ async def run():
 
 def main():
     app.context.run()
-    app.loop.run_until_complete(run())
+    app._get_runtime_loop().run_until_complete(run())
 
 
 if __name__ == "__main__":

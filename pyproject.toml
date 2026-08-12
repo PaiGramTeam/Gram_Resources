@@ -7,14 +7,14 @@ requires-python = ">=3.10"
 dependencies = [
     "aiofiles>=24.1.0",
     "beautifulsoup4>=4.13.4",
-    "black<25.0.0,>=24.10.0",
+    "black<27.0.0,>=26.0.0",
     "httpx>=0.28.1",
-    "lxml>=5.4.0",
+    "lxml>=6.1.0",
     "persica",
     "pydantic>=2.11.4",
-    "pydantic-settings>=2.9.1",
-    "python-dotenv>=1.1.0",
-    "ujson>=5.10.0",
+    "pydantic-settings>=2.15.0",
+    "python-dotenv>=1.2.0",
+    "ujson>=5.13.0",
 ]
 
 [tool.uv.sources]

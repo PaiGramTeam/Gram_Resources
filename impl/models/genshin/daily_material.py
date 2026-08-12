@@ -2,7 +2,7 @@ from typing import Optional, List, Dict
 
 from pydantic import BaseModel, RootModel
 
-CITY_NAMES = ["蒙德", "璃月", "稻妻", "须弥", "枫丹", "纳塔", "挪德卡莱"]
+CITY_NAMES = ["蒙德", "璃月", "稻妻", "须弥", "枫丹", "纳塔", "挪德卡莱", "至冬"]
 
 
 class AreaDailyMaterialsData(BaseModel):

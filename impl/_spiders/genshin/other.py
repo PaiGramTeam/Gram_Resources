@@ -203,6 +203,9 @@ class GenshinRoleMaterialSpider(BaseSpider):
                 if not i:
                     continue
                 t_list = self.weapon_promote_map.get(pid, [])
+                if "id" not in i:
+                    logs.info("无法识别武器升级数据中的素材消耗字段 - 缺失 id %s", weapon)
+                    continue
                 if i["id"] not in t_list:
                     t_list.append(i["id"])
                     self.weapon_promote_map[pid] = t_list
@@ -253,6 +256,9 @@ class GenshinRoleMaterialSpider(BaseSpider):
                 if not i:
                     continue
                 t_list = data_material_map.get(pid, [])
+                if "id" not in i:
+                    logs.info("无法识别角色升级数据中的素材消耗字段 - 缺失 id %s", avatar)
+                    continue
                 if i["id"] not in t_list:
                     t_list.append(i["id"])
                     data_material_map[pid] = t_list
