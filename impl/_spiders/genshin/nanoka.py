@@ -115,6 +115,10 @@ class NanokaCharacterSpider(NanokaBaseSpider):
     async def parse_content(self, key: str, data: Dict[str, Any]) -> Optional[BaseWikiModel]:
         c_data = self.get_character_data(key, data)
         game_name = self.get_game_name(data.get("icon", ""))
+        # 第三人称射击旅行者特殊处理：跳过
+        if str(c_data["id"]) in {"10000134", "10000135"}:
+            logs.info(f"nanoka 跳过第三人称射击旅行者角色：{c_data}")
+            return None
         # 旅行者特殊处理：固定 5 星
         if (
             str(c_data["id"]).startswith("10000117-")
@@ -122,6 +126,7 @@ class NanokaCharacterSpider(NanokaBaseSpider):
             or c_data["id"] == "10000062"
         ):
             c_data["rank"] = 5
+            c_data["birthday"] = {"month": 0, "day": 0}
         if c_data.get("rank") is None:
             logs.info(f"nanoka 跳过异常角色：{c_data}")
             return None
@@ -163,6 +168,9 @@ class NanokaWeaponSpider(NanokaBaseSpider):
     async def parse_content(self, key: str, data: Dict[str, Any]) -> Optional[BaseWikiModel]:
         w_data = self.get_weapon_data(key, data)
         game_name = self.get_game_name(data.get("icon", ""))
+        if w_data.get("weapon_type") == "ITEM_TPS_WEAPON":
+            # skip: ITEM_TPS_WEAPON
+            return None
         weapon = Weapon.model_validate(w_data)
         await _download_icons(self, weapon, self.game_name_map(game_name))
         return weapon

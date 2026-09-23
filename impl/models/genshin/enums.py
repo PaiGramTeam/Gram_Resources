@@ -35,7 +35,7 @@ class WeaponType(StrEnum):
             "WEAPON_POLE": "长柄武器",
             "WEAPON_CATALYST": "法器",
             "WEAPON_BOW": "弓",
-        }.get(self.value)
+        }[self.value]
 
 
 class Element(StrEnum):
