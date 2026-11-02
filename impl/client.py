@@ -47,7 +47,7 @@ class _AssetsCouldNotFound(_AssetsServiceError):
 
 class _AssetsService(Generic[T]):
     client: "AsyncClient" = AsyncClient(timeout=60.0)
-    BASE_URL = "https://ys-res.paimon.vip/"
+    BASE_URL = "https://ys-res.miyoushe.de5.net/"
     game: "Game"
     data_type: "DataType"
     data_model: Type[T]
